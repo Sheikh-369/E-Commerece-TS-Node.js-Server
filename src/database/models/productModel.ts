@@ -43,12 +43,12 @@ class Product extends Model{
         type : DataType.INTEGER, 
         allowNull : false
     })
-    declare discount:number
+    declare productDiscount:number
 
     @Column({
         type : DataType.STRING
     })
-    declare productImageUrl : string
+    declare productImage:string
 }
 
 export default Product
