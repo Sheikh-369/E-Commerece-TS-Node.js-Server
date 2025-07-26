@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import Category from "../database/models/categoryModel"
 
 class CategoryController{
+    //categories to be seeded
     static categories=[
         {
             categoryName:"Clothing"
@@ -17,6 +18,7 @@ class CategoryController{
         }
     ]
 
+    //category seeding
     static async seedCategory(){
         const data=await Category.findAll()
         if(data.length===0){
@@ -28,6 +30,7 @@ class CategoryController{
         
     }
 
+    //adding category
     static async addCategory(req:Request,res:Response){
         const {categoryName}=req.body
         if(!categoryName){
@@ -47,6 +50,8 @@ class CategoryController{
         })
     }
 
+
+    //updating category
     static async editCategory(req:Request,res:Response){
         const id=req.params.id
         const {categoryName}=req.body
@@ -61,13 +66,16 @@ class CategoryController{
             categoryName
         },{where:{id}})
 
+        const updatedCategory=await Category.findByPk(id)//updated category
+
         res.status(200).json({
             message:"Category Updated Successfully!",
-            data
+            data:updatedCategory
         })
     }
 
 
+    //fetching all categories
     static async fetchAllCategories(req:Request,res:Response){
         const data=await Category.findAll()
         res.status(200).json({
@@ -77,6 +85,7 @@ class CategoryController{
     }
 
 
+    //fetching single category
     static async fetchSingleCategory(req:Request,res:Response){
         const id=req.params.id
         const data=await Category.findByPk(id)
@@ -87,7 +96,7 @@ class CategoryController{
     }
 
 
-    
+    //deleting category
     static async deleteCategory(req:Request,res:Response){
         const id = req.params.id 
         
