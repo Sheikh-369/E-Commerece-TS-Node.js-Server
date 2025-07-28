@@ -12,6 +12,11 @@ interface IExtendedRequest extends Request{
     }
 }
 
+export enum Role{
+    Admin = 'admin', 
+    Customer = "customer"
+}
+
 class Middleware{
     static  async isLoggedI(req:IExtendedRequest,res:Response,next:NextFunction){
         const token=req.headers.authorization
@@ -41,6 +46,19 @@ class Middleware{
         })
 
         
+    }
+
+    static accessTo(...roles:Role[]){ 
+        return (req:IExtendedRequest,res:Response,next:NextFunction)=>{
+            const userRole = req.user?.role as Role
+           if(!roles.includes(userRole)){
+                res.status(403).json({
+                    message : "Unauthorized Access!"
+                })
+                return
+            }
+            next()
+        }
     }
 }
 
