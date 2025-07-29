@@ -5,9 +5,11 @@ import Category from "../database/models/categoryModel";
 
 class ProductController{
     static async createProduct(req:Request,res:Response){
-        const {productName,productDescription,productPrice,productTotalStock,productDiscount} = req.body 
+        const {productName,productDescription,productPrice,productTotalStock,productDiscount,categoryId} = req.body
         
-        if(!productName || !productDescription || !productPrice || !productTotalStock){
+        const productImage=req.file?req.file.path : "https://weimaracademy.org/wp-content/uploads/2021/08/dummy-user.png"
+        
+        if(!productName || !productDescription || !productPrice || !productTotalStock || !categoryId){
             res.status(400).json({
                 message : "Please provide all the information!"
             })
@@ -18,7 +20,9 @@ class ProductController{
             productDescription,
             productPrice,
             productTotalStock,
-            productDiscount:productDiscount || 0
+            productDiscount:productDiscount || 0,
+            categoryId,
+            productImage
         })
         res.status(200).json({
             message : "Product Created Successfully"
@@ -28,9 +32,11 @@ class ProductController{
 
     static async updateProduct(req:Request,res:Response){
         const id=req.params.id
-        const {productName,productDescription,productPrice,productTotalStock,productDiscount} = req.body 
+        const {productName,productDescription,productPrice,productTotalStock,productDiscount,categoryId} = req.body 
         
-        if(!productName || !productDescription || !productPrice || !productTotalStock){
+        const productImage=req.file?req.file.path : "https://weimaracademy.org/wp-content/uploads/2021/08/dummy-user.png"
+
+        if(!productName || !productDescription || !productPrice || !productTotalStock || !categoryId){
             res.status(400).json({
                 message : "Please provide all the information!"
             })
@@ -41,7 +47,9 @@ class ProductController{
             productDescription,
             productPrice,
             productTotalStock,
-            productDiscount : productDiscount ?? null//?? will set null if no discount is given
+            productDiscount : productDiscount ?? null,//?? will set null if no discount is given
+            categoryId,
+            productImage
         },{where:{id}})
         res.status(200).json({
             message : "Product Updated Successfully"

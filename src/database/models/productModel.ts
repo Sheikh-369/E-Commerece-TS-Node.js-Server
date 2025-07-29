@@ -28,10 +28,10 @@ class Product extends Model{
     declare productDescription:string
 
     @Column({
-        type : DataType.FLOAT, 
+        type : DataType.STRING, 
         allowNull : false
     })
-    declare productPrice:number
+    declare productPrice:string
 
     @Column({
         type : DataType.INTEGER,

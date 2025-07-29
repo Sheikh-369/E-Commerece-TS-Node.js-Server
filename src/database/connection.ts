@@ -1,5 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import { config } from "dotenv";
+import Category from "./models/categoryModel";
+import Product from "./models/productModel";
 config();
 
 
@@ -22,5 +24,8 @@ try {
 sequelize.sync({alter:false}).then(()=>{
     console.log("Migration Successful!")
 })
+
+Category.hasOne(Product,{foreignKey:'categoryId'})
+Product.belongsTo(Category,{foreignKey:'categoryId'})
 
 export default sequelize;
