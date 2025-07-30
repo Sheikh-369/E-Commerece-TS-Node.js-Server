@@ -58,7 +58,12 @@ class ProductController{
     }
 
     static async getAllProducts(req:Request,res:Response){
-        const data= await Product.findAll()
+        const data= await Product.findAll({
+            include:[{
+                model:Category,
+                attributes:["id","categoryName"]
+            }]
+        })
         res.status(200).json({
             message : "Products fetched successfully", 
             data
@@ -67,7 +72,17 @@ class ProductController{
 
     static async getSingleProduct(req:Request,res:Response){
         const id = req.params.id
-        const data=await Product.findByPk(id)
+        const data=await Product.findAll({
+            where:{
+                id
+            },
+            include:[
+                {
+                    model:Category,
+                    attributes:["id","categoryName"]
+                }
+            ]
+        })
         res.status(200).json({
             message : "Single Product Fetched Successfully", 
             data
