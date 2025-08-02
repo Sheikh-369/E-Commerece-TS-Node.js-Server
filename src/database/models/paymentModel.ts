@@ -1,13 +1,13 @@
 import { Table,Column,Model,DataType } from "sequelize-typescript";
-import { PaymentMethod, PaymentStatus } from "../../Global/types";
+import { PaymentMethods, PaymentStatus } from "../../Global/types";
 
 @Table({
-    tableName:"payments",
-    modelName:"Payment",
+    tableName:"paymentMethods",
+    modelName:"PaymentMethod",
     timestamps:true
 })
 
-class Payment extends Model{
+class PaymentMethod extends Model{
     @Column({
         primaryKey:true,
         type:DataType.UUID,
@@ -16,8 +16,8 @@ class Payment extends Model{
     declare id:string
 
     @Column({
-        type:DataType.ENUM(PaymentMethod.COD,PaymentMethod.Esewa,PaymentMethod.Khalti),
-        defaultValue:PaymentMethod.COD
+        type:DataType.ENUM(PaymentMethods.COD,PaymentMethods.Esewa,PaymentMethods.Khalti),
+        defaultValue:PaymentMethods.COD
     })
     declare paymentMethod:string
 
@@ -28,4 +28,4 @@ class Payment extends Model{
     declare paymentStatus:string
 }
 
-export default Payment
+export default PaymentMethod

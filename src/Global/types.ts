@@ -7,7 +7,7 @@ export enum OrderStatus{
 }
 
 
-export enum PaymentMethod{
+export enum PaymentMethods{
     Khalti="khalti",
     Esewa="esewa",
     COD="cod"

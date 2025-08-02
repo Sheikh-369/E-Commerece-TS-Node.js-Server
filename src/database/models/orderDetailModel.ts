@@ -2,12 +2,12 @@ import { Table,Model,Column,DataType } from "sequelize-typescript";
 import { OrderStatus } from "../../Global/types";
 
 @Table({
-    tableName:"orders",
-    modelName:"Order",
+    tableName:"orderDetails",
+    modelName:"OrderDetail",
     timestamps:true
 })
 
-class Order extends Model{
+class OrderDetail extends Model{
     @Column({
         primaryKey:true,
         type:DataType.UUID,
@@ -46,4 +46,4 @@ class Order extends Model{
     declare orderStatus:string
 
 }
-export default Order
+export default OrderDetail
