@@ -1,12 +1,12 @@
 import { Table,Model,Column,DataType } from "sequelize-typescript";
 
 @Table({
-    tableName:"orderQuantities",
-    modelName:"OrderQuantity",
+    tableName:"orderDetails",
+    modelName:"OrderDetail",
     timestamps:true
 })
 
-class OrderQuantity extends Model{
+class OrderDetail extends Model{
     @Column({
         primaryKey:true,
         type:DataType.UUID,
@@ -21,4 +21,4 @@ class OrderQuantity extends Model{
     declare orderQuantity:number
 }
 
-export default OrderQuantity
+export default OrderDetail

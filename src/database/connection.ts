@@ -3,9 +3,9 @@ import { config } from "dotenv";
 import Category from "./models/categoryModel";
 import Product from "./models/productModel";
 import User from "./models/userModel";
-import OrderDetail from "./models/orderDetailModel";
 import PaymentMethod from "./models/paymentModel";
-import OrderQuantity from "./models/orderQuantity";
+import Order from "./models/orderModel";
+import OrderDetail from "./models/orderDetail";
 config();
 
 
@@ -32,21 +32,21 @@ sequelize.sync({force:false,alter:false}).then(()=>{
 Category.hasOne(Product,{foreignKey:'categoryId'})
 Product.belongsTo(Category,{foreignKey:'categoryId'})
 
-// User X OrderDetails
-User.hasMany(OrderDetail)
-OrderDetail.belongsTo(User)
+// User X Order
+User.hasMany(Order)
+Order.belongsTo(User)
 
-// PaymentMethod X OrderDetail 
-PaymentMethod.hasOne(OrderDetail)
-OrderDetail.belongsTo(PaymentMethod)
+// PaymentMethod X Order 
+PaymentMethod.hasOne(Order)
+Order.belongsTo(PaymentMethod)
 
-//OrderDetail X OrderQuantity
-OrderDetail.hasOne(OrderQuantity)
-OrderQuantity.belongsTo(OrderDetail)
+//Order X OrderDetail
+Order.hasOne(OrderDetail)
+OrderDetail.belongsTo(Order)
 
 // Product X OrderQuantity
-Product.hasMany(OrderQuantity)
-OrderQuantity.belongsTo(Product)
+Product.hasMany(OrderDetail)
+OrderDetail.belongsTo(Product)
 
 
 export default sequelize;
