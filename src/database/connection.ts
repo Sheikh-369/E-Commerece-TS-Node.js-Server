@@ -33,20 +33,20 @@ Category.hasOne(Product,{foreignKey:'categoryId'})
 Product.belongsTo(Category,{foreignKey:'categoryId'})
 
 // User X Order
-User.hasMany(Order)
-Order.belongsTo(User)
+User.hasMany(Order,{foreignKey:'userId'})
+Order.belongsTo(User,{foreignKey:'userId'})
 
 // PaymentMethod X Order 
-PaymentMethod.hasOne(Order)
-Order.belongsTo(PaymentMethod)
+PaymentMethod.hasOne(Order,{foreignKey:'paymentId'})
+Order.belongsTo(PaymentMethod,{foreignKey:'paymentId'})
 
 //Order X OrderDetail
-Order.hasOne(OrderDetail)
-OrderDetail.belongsTo(Order)
+Order.hasOne(OrderDetail,{foreignKey:'orderId'})
+OrderDetail.belongsTo(Order,{foreignKey:'orderId'})
 
 // Product X OrderQuantity
-Product.hasMany(OrderDetail)
-OrderDetail.belongsTo(Product)
+Product.hasMany(OrderDetail,{foreignKey:'productId'})
+OrderDetail.belongsTo(Product,{foreignKey:'productId'})
 
 
 export default sequelize;
