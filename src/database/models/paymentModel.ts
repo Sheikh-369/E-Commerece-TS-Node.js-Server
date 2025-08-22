@@ -26,6 +26,11 @@ class PaymentMethod extends Model{
         defaultValue:PaymentStatus.Pending
     })
     declare paymentStatus:string
+
+    @Column({
+        type:DataType.STRING
+    })
+    declare pidx:string
 }
 
 export default PaymentMethod
