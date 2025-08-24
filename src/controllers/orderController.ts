@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import Order from "../database/models/orderModel";
 import PaymentMethod from "../database/models/paymentModel";
 import OrderDetail from "../database/models/orderDetail";
-import { PaymentMethods } from "../Global/types";
+import { PaymentMethods, PaymentStatus } from "../Global/types";
 import { khaltiPayment } from "../services/paymentIntegration";
+import axios from "axios";
 
 interface OrderRequest extends Request {
   user?: {
@@ -56,8 +57,8 @@ class OrderController {
     if (paymentMethod === PaymentMethods.Khalti) {
       const response = await khaltiPayment({
         totalAmount: totalAmount,
-        return_url: "http://localhost:3000/",
-        website_url: "http://localhost:3000/",
+        return_url: "http://localhost:3500/",
+        website_url: "http://localhost:3500/",
         purchase_order_id: orderData.id,
         purchase_order_name: "Order_" + orderData.id,
       });
@@ -81,6 +82,42 @@ class OrderController {
     return res.status(200).json({
       message: "Order created successfully!",
     });
+  }
+
+  async khaltiVerification(req:OrderRequest,res:Response){
+    const {pidx}=req.body
+    if(!pidx){
+      res.status(400).json({
+        message:"Please Provide pidx!"
+      })
+      return
+    }
+
+    const response=await axios.post("https://a.khalti.com/api/v2/epayment/lookup/",{
+      pidx:pidx
+    },{
+      headers:{
+        Authorization:"Key d6b8b250e2024fb5b258a9beee2fa6c6"
+      }
+    })
+    const data=response.data
+    if(data.status==="Completed"){
+      await PaymentMethod.update({
+        paymentStatus:PaymentStatus.Paid
+      },{
+        where:{
+          pidx:pidx
+        }
+      })
+      res.status(200).json({
+        message:"Payment Successful!"
+      })
+    }else{
+      res.status(400).json({
+        message:"Payment Failed or Cancelled!"
+      })
+    }
+
   }
 }
 

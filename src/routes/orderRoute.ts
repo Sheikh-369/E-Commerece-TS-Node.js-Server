@@ -10,4 +10,9 @@ router.route("/order").post(Middleware.isLoggedI,
     asyncErrorHandler(orderController.createOrder)
 )
 
+router.route("/verify-transaction").post(Middleware.isLoggedI,
+    Middleware.accessTo(Role.Customer),
+    asyncErrorHandler(orderController.khaltiVerification)
+)
+
 export default router
