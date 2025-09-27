@@ -5,16 +5,20 @@ class CategoryController{
     //categories to be seeded
     static categories=[
         {
-            categoryName:"Clothing"
+            categoryName:"Clothing",
+            categoryDescription:"Feel the luxury within you."
         },
         {
-            categoryName:"Electronics"
+            categoryName:"Electronics",
+            categoryDescription:"We built the safest technology for your comfortness."
         },
         {
-            categoryName:"Groceries"
+            categoryName:"Groceries",
+            categoryDescription:"You health matters, every grain is hand picked."
         },
         {
-            categoryName:"Drinks"
+            categoryName:"Drinks",
+            categoryDescription:"We value your thirst.Each drop has the feel of quich of heaven!"
         }
     ]
 

@@ -1,12 +1,14 @@
-import { Table, Model, Column, DataType, ForeignKey } from "sequelize-typescript";
-import Order from "./orderModel";
+import { Table, Column, Model, DataType, ForeignKey } from "sequelize-typescript";
+import User from "./userModel";
+import Product from "./productModel";
+
 
 @Table({
-  tableName: "orderDetails",
-  modelName: "OrderDetail",
+  tableName: "carts",
+  modelName: "Cart",
   timestamps: true
 })
-class OrderDetail extends Model {
+class Cart extends Model {
   @Column({
     primaryKey: true,
     type: DataType.UUID,
@@ -14,13 +16,14 @@ class OrderDetail extends Model {
   })
   declare id: string;
 
-  @ForeignKey(() => Order)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false
   })
-  declare orderId: string;
+  declare userId: string;
 
+  @ForeignKey(() => Product)
   @Column({
     type: DataType.UUID,
     allowNull: false
@@ -31,7 +34,7 @@ class OrderDetail extends Model {
     type: DataType.INTEGER,
     allowNull: false
   })
-  declare orderQuantity: number;
+  declare quantity: number;
 }
 
-export default OrderDetail;
+export default Cart;
