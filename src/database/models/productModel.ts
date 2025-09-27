@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, ForeignKey } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript'
 import Category from './categoryModel'
 
 @Table({
@@ -12,48 +12,51 @@ class Product extends Model {
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4
   })
-  declare id: string
+  declare id: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false
   })
-  declare productName: string
+  declare productName: string;
 
   @Column({
     type: DataType.TEXT
   })
-  declare productDescription: string
+  declare productDescription: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false
   })
-  declare productPrice: string
+  declare productPrice: string;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false
   })
-  declare productTotalStock: number
+  declare productTotalStock: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false
   })
-  declare productDiscount: number
+  declare productDiscount: number;
 
   @Column({
     type: DataType.STRING
   })
-  declare productImage: string
+  declare productImage: string;
 
   @ForeignKey(() => Category)
   @Column({
     type: DataType.UUID,
     allowNull: false
   })
-  declare categoryId: string
+  declare categoryId: string;
+
+  @BelongsTo(() => Category)
+  declare category: Category; // ⬅️ This is what was missing
 }
 
-export default Product
+export default Product;
