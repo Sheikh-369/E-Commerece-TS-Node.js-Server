@@ -24,7 +24,9 @@ class CategoryController{
 
     //category seeding
     static async seedCategory(){
+        //array of categories
         const data=await Category.findAll()
+        //if there be no category at all
         if(data.length===0){
             await Category.bulkCreate(this.categories)
             console.log("Category Seeded Successfully!")
@@ -36,8 +38,8 @@ class CategoryController{
 
     //adding category
     static async addCategory(req:Request,res:Response){
-        const {categoryName}=req.body
-        if(!categoryName){
+        const {categoryName,categoryDescription}=req.body
+        if(!categoryName || !categoryDescription){
             res.status(400).json({
                 message:"Please fill the field!"
             })
@@ -45,7 +47,8 @@ class CategoryController{
         }
 
         const data=await Category.create({
-            categoryName
+            categoryName,
+            categoryDescription
         })
 
         res.status(200).json({
@@ -58,8 +61,8 @@ class CategoryController{
     //updating category
     static async editCategory(req:Request,res:Response){
         const id=req.params.id
-        const {categoryName}=req.body
-        if(!categoryName){
+        const {categoryName,categoryDescription}=req.body
+        if(!categoryName || !categoryDescription){
             res.status(400).json({
                 message:"Please fill the field!"
             })
@@ -67,7 +70,8 @@ class CategoryController{
         }
 
         const data=await Category.update({
-            categoryName
+            categoryName,
+            categoryDescription
         },{where:{id}})
 
         const updatedCategory=await Category.findByPk(id)//updated category

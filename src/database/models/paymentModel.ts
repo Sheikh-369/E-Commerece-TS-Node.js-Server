@@ -1,5 +1,6 @@
-import { Table, Column, Model, DataType } from "sequelize-typescript";
+import { Table, Column, Model, DataType, ForeignKey } from "sequelize-typescript";
 import { PaymentMethods, PaymentStatus } from "../../Global/types";
+import Order from "./orderModel";
 
 @Table({
   tableName: "payments",
@@ -30,6 +31,13 @@ class Payment extends Model {
     type: DataType.STRING
   })
   declare pidx: string;
+
+  @ForeignKey(() => Order)
+  @Column({
+    type: DataType.UUID,
+    allowNull: false
+  })
+  declare orderId: string;
 }
 
 export default Payment;

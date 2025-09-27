@@ -1,10 +1,10 @@
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
 import Order from "../database/models/orderModel";
-import PaymentMethod from "../database/models/paymentModel";
 import OrderDetail from "../database/models/orderDetail";
 import { PaymentMethods, PaymentStatus } from "../Global/types";
 import { khaltiPayment } from "../services/paymentIntegration";
 import axios from "axios";
+import Payment from "../database/models/paymentModel";
 
 interface OrderRequest extends Request {
   user?: {
@@ -19,8 +19,10 @@ interface IProduct {
 
 class OrderController {
   async createOrder(req: OrderRequest, res: Response) {
+    //tracking user from the user table
     const userId = req.user?.id;
 
+    //validation
     const { phoneNumber, shippingAddress, totalAmount, paymentMethod } = req.body;
     const products: IProduct[] = req.body.products;
 
@@ -30,21 +32,26 @@ class OrderController {
       });
     }
 
-    // Create PaymentMethod
-    const paymentData = await PaymentMethod.create({
-      paymentMethod: paymentMethod,
-    });
-
-    // Create Order
+    // Creating Order table
     const orderData = await Order.create({
       phoneNumber,
       shippingAddress,
       totalAmount,
       userId,
-      paymentId: paymentData.id,
+      // paymentId: paymentData.id,
     });
 
-    // Create OrderDetails
+    // Creating Payment table
+    const paymentData = await Payment.create({
+      paymentMethod: paymentMethod,
+      orderId:orderData.id
+    });
+
+    //including paymentId in order table
+    orderData.paymentId = paymentData.id;
+    await orderData.save();
+
+    // Creating OrderDetails table
     for (const product of products) {
       await OrderDetail.create({
         productId: product.productId,
@@ -102,7 +109,7 @@ class OrderController {
     })
     const data=response.data
     if(data.status==="Completed"){
-      await PaymentMethod.update({
+      await Payment.update({
         paymentStatus:PaymentStatus.Paid
       },{
         where:{

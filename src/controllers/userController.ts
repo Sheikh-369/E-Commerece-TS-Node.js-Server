@@ -20,7 +20,7 @@ class UserControler{
         }
 
         //checking if the email eneterd by the user is already registered
-        const [data] =  await User.findAll({
+        const data =  await User.findOne({
             where : {
                 userEmail : userEmail
             }
@@ -48,32 +48,33 @@ class UserControler{
     static async userLogin(req:Request,res:Response){
         const {userEmail,userPassword}=req.body
 
+        //validation
         if(!userEmail || !userPassword){
             res.status(400).json({
                 message:"Please fill all the fields!"
             })
             return
         }
-
-        const data=await User.findAll({
+        //comparing email with table in database     
+        const data=await User.findOne({
             where:{userEmail:userEmail}
         })
-        if(data.length===0){
+        if(!data){
             res.status(400).json({
                 message:"Email Not Registered!"
             })
             return
         }
-
-        const isPasswordMatching=bcrypt.compareSync(userPassword,data[0].userPassword)
+        //comparing password
+        const isPasswordMatching=bcrypt.compareSync(userPassword,data.userPassword)
         if(!isPasswordMatching){
             res.status(400).json({
                 message:"Invalid Email or Password!"
             })
             return
         }
-
-        const token=jwt.sign({id:data[0].id},process.env.JWT_SECRET!,{expiresIn:"30d"})
+        //if password & eamil match, genetrate token
+        const token=jwt.sign({id:data.id},process.env.JWT_SECRET!,{expiresIn:"30d"})
         res.status(200).json({
             message:"User Login Successful!",
             token:token

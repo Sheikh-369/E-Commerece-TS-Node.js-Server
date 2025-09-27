@@ -61,7 +61,7 @@ class ProductController{
         const data= await Product.findAll({
             include:[{
                 model:Category,
-                attributes:["id","categoryName"]
+                attributes:["categoryName"]
             }]
         })
         res.status(200).json({
@@ -70,44 +70,46 @@ class ProductController{
         })
     }
 
-    static async getSingleProduct(req:Request,res:Response){
-        const id = req.params.id
-        const data=await Product.findAll({
-            where:{
-                id
-            },
-            include:[
-                {
-                    model:Category,
-                    attributes:["id","categoryName"]
-                }
-            ]
-        })
-        res.status(200).json({
-            message : "Single Product Fetched Successfully", 
-            data
-        })
+    static async getSingleProduct(req: Request, res: Response) {
+    const id = req.params.id;
+    const data = await Product.findOne({
+        where: { id },
+        include: [
+        {
+            model: Category,
+            attributes: ["categoryName"],
+        },
+        ],
+    });
+
+    if (!data) {
+        return res.status(404).json({ message: "Product not found." });
     }
 
-    static async deleteProduct(req:Request,res:Response){
-        const id=req.params.id
-        const data = await Product.findAll({
-            where : {id}
-        })
-        if(data.length === 0){
-            res.status(404).json({
-                message : "The product does not exists!"
-            })
-        }else{
-            await Product.destroy({
-                where : {id}
-            })
-            res.status(200).json({
-                message : "Product Deleted Successfully", 
-                data
-            })
-        }
+    res.status(200).json({
+        message: "Single Product Fetched Successfully.",
+        data,
+    });
     }
+
+    static async deleteProduct(req: Request, res: Response) {
+        const id = req.params.id;
+        const data = await Product.findOne({ where: { id } });
+
+        if (!data) {
+            return res.status(404).json({
+            message: "The product does not exist!"
+            });
+        }
+
+        await Product.destroy({ where: { id } });
+        
+        res.status(200).json({
+            message: "Product Deleted Successfully.",
+            data
+        });
+    }
+
 }
 
 export default  ProductController
