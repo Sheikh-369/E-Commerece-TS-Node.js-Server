@@ -1,7 +1,6 @@
-import { Table, Column, Model, DataType, ForeignKey } from "sequelize-typescript";
+import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from "sequelize-typescript";
 import User from "./userModel";
 import Product from "./productModel";
-
 
 @Table({
   tableName: "carts",
@@ -35,6 +34,10 @@ class Cart extends Model {
     allowNull: false
   })
   declare quantity: number;
+
+  // ✅ Add this association
+  @BelongsTo(() => Product)
+  declare product: Product;
 }
 
 export default Cart;
