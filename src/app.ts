@@ -1,4 +1,5 @@
 import express from "express"
+import cors from "cors"
 const app=express()
 
 import "./database/connection"
@@ -10,6 +11,11 @@ import orderRoute from "./routes/orderRoute"
 import cartRoute from "./routes/cartRoute"
 
 app.use(express.json())
+
+app.use(cors({
+    origin:"http://localhost:3000"
+}))
+
 //auth
 app.use("/ecommerce/auth",userRoute)
 //product
