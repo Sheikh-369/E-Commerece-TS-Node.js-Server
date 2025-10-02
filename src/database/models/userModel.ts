@@ -28,6 +28,11 @@ class User extends Model{
     @Column({
         type : DataType.STRING
     })
+    declare userPhoneNumber:string
+
+    @Column({
+        type : DataType.STRING
+    })
     declare userPassword:string 
 
     @Column({

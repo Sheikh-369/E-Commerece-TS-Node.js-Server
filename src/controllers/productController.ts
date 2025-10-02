@@ -5,7 +5,7 @@ import Category from "../database/models/categoryModel";
 
 class ProductController{
     static async createProduct(req:Request,res:Response){
-        const {productName,productDescription,productPrice,productTotalStock,productDiscount,categoryId} = req.body
+        const {productName,productDescription,productPrice,oldPrice,productTotalStock,productDiscount,categoryId} = req.body
         
         const productImage=req.file?req.file.path : "https://weimaracademy.org/wp-content/uploads/2021/08/dummy-user.png"
         
@@ -19,6 +19,7 @@ class ProductController{
             productName,
             productDescription,
             productPrice,
+            oldPrice,
             productTotalStock,
             productDiscount:productDiscount || 0,
             categoryId,
@@ -32,7 +33,7 @@ class ProductController{
 
     static async updateProduct(req:Request,res:Response){
         const id=req.params.id
-        const {productName,productDescription,productPrice,productTotalStock,productDiscount,categoryId} = req.body 
+        const {productName,productDescription,productPrice,oldPrice,productTotalStock,productDiscount,categoryId} = req.body 
         
         const productImage=req.file?req.file.path : "https://weimaracademy.org/wp-content/uploads/2021/08/dummy-user.png"
 
@@ -46,6 +47,7 @@ class ProductController{
             productName,
             productDescription,
             productPrice,
+            oldPrice,
             productTotalStock,
             productDiscount : productDiscount ?? null,//?? will set null if no discount is given
             categoryId,

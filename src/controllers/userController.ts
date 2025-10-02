@@ -9,10 +9,10 @@ class UserControler{
 
     //**********USER REGISTER LOGIC***********************
     static async userRegister(req:Request,res:Response){
-        const {userName,userEmail,userPassword}=req.body
+        const {userName,userEmail,userPassword,userPhoneNumber}=req.body
 
         //confirming that the user does not leave fields empty
-        if(!userName || !userEmail || !userPassword){
+        if(!userName || !userEmail || !userPassword || !userPhoneNumber){
             res.status(400).json({
                 message:"Please fill all the fields!"
             })
@@ -35,7 +35,8 @@ class UserControler{
         //user registration concept
         await User.create({
             userName, 
-            userEmail, 
+            userEmail,
+            userPhoneNumber, 
             userPassword : bcrypt.hashSync(userPassword,10) 
     
         })
@@ -173,6 +174,18 @@ class UserControler{
         message: "Password has been reset successfully."
     });
 }
+
+    static async fetchAllUsers(req: Request, res: Response) {
+        const users = await User.findAll({
+        attributes: ["id", "userName", "userEmail", "userPhoneNumber","createdAt"],
+        order: [["userName", "ASC"]]  // alphabetical order A → Z
+        });
+
+        res.status(200).json({
+        message: "All Users Fetched Successfully!",
+        data: users,
+        });
+    }
 
 }
 export default UserControler

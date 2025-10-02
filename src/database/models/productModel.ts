@@ -32,6 +32,11 @@ class Product extends Model {
   declare productPrice: string;
 
   @Column({
+    type:DataType.STRING
+  })
+  declare oldPrice:string
+
+  @Column({
     type: DataType.INTEGER,
     allowNull: false
   })
