@@ -7,13 +7,11 @@ import asyncErrorHandler from "../services/asyncErrorHandler"
 const router:Router=express.Router()
 
 router.route("/product").post(
-    Middleware.isLoggedI,
-    Middleware.accessTo(Role.Admin),upload.single("productImage"),
+    upload.single("productImage"),
     asyncErrorHandler(ProductController.createProduct))
 
 router.route("/product/:id").patch(
-    Middleware.isLoggedI,
-    Middleware.accessTo(Role.Admin),upload.single("productImage"),
+    upload.single("productImage"),
     asyncErrorHandler(ProductController.updateProduct))
 
 router.route("/product").get(asyncErrorHandler(
@@ -23,8 +21,6 @@ router.route("/product/:id").get(asyncErrorHandler(
     ProductController.getSingleProduct))
 
 router.route("/product/:id").delete(
-    Middleware.isLoggedI,
-    Middleware.accessTo(Role.Admin),
     asyncErrorHandler(ProductController.deleteProduct))
 
 export default router
