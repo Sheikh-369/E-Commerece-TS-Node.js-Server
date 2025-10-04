@@ -4,7 +4,8 @@ import Category from './categoryModel'
 @Table({
   tableName: "products",
   modelName: "Product",
-  timestamps: true
+  timestamps: true,
+  paranoid: true, // Sequelize soft delete support
 })
 class Product extends Model {
   @Column({
@@ -61,7 +62,11 @@ class Product extends Model {
   declare categoryId: string;
 
   @BelongsTo(() => Category)
-  declare category: Category; // ⬅️ This is what was missing
+  declare category: Category;
+
+  @Column(DataType.DATE)
+  declare deletedAt?: Date;
+
 }
 
 export default Product;

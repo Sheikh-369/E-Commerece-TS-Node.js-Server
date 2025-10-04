@@ -9,7 +9,7 @@ interface AuthUser extends Request{
 }
 
 const addToCart=async(req:AuthUser,res:Response)=>{
-    const userId=req.user?.id
+    const userId=req.user?.id || "10ffae5c-776b-4809-b9ca-357f7ee91d9c"//only for testing
     const{productId,quantity}=req.body
 
     if(!productId || !quantity){
@@ -40,7 +40,7 @@ const addToCart=async(req:AuthUser,res:Response)=>{
 }
 
 const showCartItems=async(req:AuthUser,res:Response)=>{
-    const userId=req.user?.id
+    const userId=req.user?.id || "10ffae5c-776b-4809-b9ca-357f7ee91d9c"//only for testing
 
     const cartItems=await Cart.findAll({
         where:{

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Product from "../database/models/productModel";
 import Category from "../database/models/categoryModel";
+import Cart from "../database/models/cartModel";
 
 
 class ProductController{
@@ -103,6 +104,10 @@ class ProductController{
             message: "The product does not exist!"
             });
         }
+
+        //Cart ma soft delete hunx
+        await Cart.update({ deletedAt: new Date() }, { where: { productId: id } });
+
 
         await Product.destroy({ where: { id } });
         

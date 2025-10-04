@@ -35,9 +35,19 @@ class Cart extends Model {
   })
   declare quantity: number;
 
-  // ✅ Add this association
-  @BelongsTo(() => Product)
+  // product delete huda cart ma delte hune logic
+  @BelongsTo(() => Product, {
+    onDelete: 'CASCADE'
+  })
   declare product: Product;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true
+  })
+  declare deletedAt: Date | null;
+
+
 }
 
 export default Cart;
