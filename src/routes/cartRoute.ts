@@ -16,13 +16,13 @@ router.route("/cart").get(
     asyncErrorHandler(showCartItems)
 )
 
-router.route("/cart/:productId").delete(
+router.route("/cart/:cartItemId").delete(
     // Middleware.isLoggedI,
     // Middleware.accessTo(Role.Customer),
     asyncErrorHandler(deleteCartItem)
 )
 
-router.route("/cart/:productId").patch(
+router.route("/cart/:cartItemId").patch(
     // Middleware.isLoggedI,
     // Middleware.accessTo(Role.Customer),
     asyncErrorHandler(updateCartItemQuantity)

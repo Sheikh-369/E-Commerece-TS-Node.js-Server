@@ -32,6 +32,18 @@ class Order extends Model {
   declare paymentId: string;
 
   @Column({
+    type:DataType.STRING,
+    allowNull:false
+  })
+  declare firstName:string
+
+    @Column({
+    type:DataType.STRING,
+    allowNull:false
+  })
+  declare lastName:string
+
+  @Column({
     type: DataType.STRING,
     allowNull: false,
     validate: {
@@ -44,10 +56,34 @@ class Order extends Model {
   declare phoneNumber: string;
 
   @Column({
+    type:DataType.STRING,
+    allowNull:false
+  })
+  declare email:string
+
+  @Column({
     type: DataType.STRING,
     allowNull: false
   })
-  declare shippingAddress: string;
+  declare province: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
+  declare district: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
+  declare city: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
+  declare tole: string;
 
   @Column({
     type: DataType.FLOAT,

@@ -66,31 +66,26 @@ const showCartItems=async(req:AuthUser,res:Response)=>{
     }
 }
 
-const deleteCartItem=async(req:AuthUser,res:Response)=>{
-    const userId=req.user?.id
-    const productId=req.params.productId
-    const cartItem=await Cart.findOne({where:{
-        userId,productId
-    }})
-    if(!cartItem){
-        res.status(400).json({
-            message:"There are no items in your cart."
-        })
-        return
+const deleteCartItem = async (req: AuthUser, res: Response) => {
+    const userId = req.user?.id || "10ffae5c-776b-4809-b9ca-357f7ee91d9c"; // for testing
+    const cartItemId = req.params.cartItemId;
+
+    const cartItem = await Cart.findOne({
+        where: { id: cartItemId, userId },
+    });
+
+    if (!cartItem) {
+        return res.status(400).json({ message: "Cart item not found." });
     }
 
-    await Cart.destroy({
-        where:{
-            userId,productId
-        }})
-    res.status(200).json({
-        message:"Item deleted successfully."
-    })
-}
+    await Cart.destroy({ where: { id: cartItemId, userId } });
+    res.status(200).json({ message: "Item deleted successfully." });
+};
+
 
 const updateCartItemQuantity = async (req: AuthUser, res: Response) => {
-    const userId = req.user?.id;
-    const { productId } = req.params;
+    const userId = req.user?.id || "10ffae5c-776b-4809-b9ca-357f7ee91d9c"//only for testing
+    const cartItemId = req.params.cartItemId
     const { quantity } = req.body;
 
     if (quantity === undefined) {
@@ -102,7 +97,7 @@ const updateCartItemQuantity = async (req: AuthUser, res: Response) => {
     const cartItem = await Cart.findOne({
         where: {
             userId,
-            productId
+            id:cartItemId
         }
     });
 

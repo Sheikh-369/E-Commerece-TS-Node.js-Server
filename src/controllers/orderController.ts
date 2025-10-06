@@ -5,6 +5,7 @@ import { PaymentMethods, PaymentStatus } from "../Global/types";
 import { khaltiPayment } from "../services/paymentIntegration";
 import axios from "axios";
 import Payment from "../database/models/paymentModel";
+import Cart from "../database/models/cartModel";
 
 interface OrderRequest extends Request {
   user?: {
@@ -23,10 +24,10 @@ class OrderController {
     const userId = req.user?.id;
 
     //validation
-    const { phoneNumber, shippingAddress, totalAmount, paymentMethod } = req.body;
+    const {firstName,lastName, phoneNumber,email, province,district,city,tole,totalAmount, paymentMethod } = req.body;
     const products: IProduct[] = req.body.products;
 
-    if (!phoneNumber || !shippingAddress || !totalAmount || products.length === 0) {
+    if (!firstName || !lastName || !phoneNumber || !email || !province || !district || !city || !tole || !totalAmount || products.length === 0) {
       return res.status(400).json({
         message: "Please fill all the information!",
       });
@@ -34,8 +35,14 @@ class OrderController {
 
     // Creating Order table
     const orderData = await Order.create({
+      firstName,
+      lastName,
       phoneNumber,
-      shippingAddress,
+      email,
+      province,
+      district,
+      city,
+      tole,
       totalAmount,
       userId,
       // paymentId: paymentData.id,
@@ -60,6 +67,17 @@ class OrderController {
       });
     }
 
+    // Get array of product IDs from the products array
+  const productIds = products.map(product => product.productId);
+
+  await Cart.destroy({
+    where: {
+      userId,
+      productId: productIds,  // Sequelize will interpret this as IN clause
+    },
+  });
+
+    
     // If Khalti is selected, initiate payment and save pidx
     if (paymentMethod === PaymentMethods.Khalti) {
       const response = await khaltiPayment({
