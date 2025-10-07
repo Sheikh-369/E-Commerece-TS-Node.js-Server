@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Product from "../database/models/productModel";
 import Category from "../database/models/categoryModel";
 import Cart from "../database/models/cartModel";
+import { Op } from 'sequelize';
 
 
 class ProductController{
@@ -72,6 +73,32 @@ class ProductController{
             data
         })
     }
+
+    
+
+    static async getByCategory(req: Request, res: Response) {
+        const { categoryName } = req.params;
+
+        const data = await Product.findAll({
+            include: [
+            {
+                model: Category,
+                where: {
+                categoryName: {
+                    [Op.iLike]: categoryName, // Case-insensitive match for PostgreSQL
+                },
+                },
+                attributes: ['categoryName'],
+            },
+            ],
+    });
+
+    res.status(200).json({
+        message: `${categoryName} products fetched successfully`,
+        data,
+    });
+    }
+
 
     static async getSingleProduct(req: Request, res: Response) {
     const id = req.params.id;

@@ -44,7 +44,7 @@ class Product extends Model {
   declare productTotalStock: number;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.FLOAT,
     allowNull: false
   })
   declare productDiscount: number;
