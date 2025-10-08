@@ -74,8 +74,6 @@ class ProductController{
         })
     }
 
-    
-
     static async getByCategory(req: Request, res: Response) {
         const { categoryName } = req.params;
 
@@ -98,7 +96,6 @@ class ProductController{
         data,
     });
     }
-
 
     static async getSingleProduct(req: Request, res: Response) {
     const id = req.params.id;
