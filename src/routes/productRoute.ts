@@ -25,6 +25,10 @@ router.route("/product").get(asyncErrorHandler(
 router.route("/product/category/:categoryName").get(
     asyncErrorHandler(ProductController.getByCategory));
 
+router.route("/product/featured").get(
+    asyncErrorHandler(ProductController.getFeaturedProducts)
+);
+
 router.route("/product/:id").get(asyncErrorHandler(
     ProductController.getSingleProduct))
 

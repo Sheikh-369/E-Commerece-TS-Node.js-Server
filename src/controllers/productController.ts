@@ -7,7 +7,7 @@ import { Op } from 'sequelize';
 
 class ProductController{
     static async createProduct(req:Request,res:Response){
-        const {productName,productDescription,productPrice,oldPrice,productTotalStock,productDiscount,categoryId} = req.body
+        const {productName,productDescription,productPrice,oldPrice,productTotalStock,productDiscount,categoryId,isFeatured} = req.body
         
         const productImage=req.file?req.file.path : "https://weimaracademy.org/wp-content/uploads/2021/08/dummy-user.png"
         
@@ -25,7 +25,8 @@ class ProductController{
             productTotalStock,
             productDiscount:productDiscount || 0,
             categoryId,
-            productImage
+            productImage,
+            isFeatured:isFeatured || false
         })
         res.status(200).json({
             message : "Product Created Successfully"
@@ -35,7 +36,7 @@ class ProductController{
 
     static async updateProduct(req:Request,res:Response){
         const id=req.params.id
-        const {productName,productDescription,productPrice,oldPrice,productTotalStock,productDiscount,categoryId} = req.body 
+        const {productName,productDescription,productPrice,oldPrice,productTotalStock,productDiscount,categoryId,isFeatured} = req.body 
         
         const productImage=req.file?req.file.path : "https://weimaracademy.org/wp-content/uploads/2021/08/dummy-user.png"
 
@@ -53,7 +54,8 @@ class ProductController{
             productTotalStock,
             productDiscount : productDiscount ?? null,//?? will set null if no discount is given
             categoryId,
-            productImage
+            productImage,
+            isFeatured:isFeatured || false
         },{where:{id}})
         res.status(200).json({
             message : "Product Updated Successfully"
@@ -96,6 +98,20 @@ class ProductController{
         data,
     });
     }
+
+    static async getFeaturedProducts(req: Request, res: Response) {
+        const data = await Product.findAll({
+            where: {
+            isFeatured: true,
+            },
+        });
+
+        res.status(200).json({
+            message: "Featured products fetched successfully",
+            data,
+        });
+    }
+
 
     static async getSingleProduct(req: Request, res: Response) {
     const id = req.params.id;

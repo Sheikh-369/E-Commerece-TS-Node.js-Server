@@ -67,6 +67,12 @@ class Product extends Model {
   @Column(DataType.DATE)
   declare deletedAt?: Date;
 
+  @Column({
+    type:DataType.BOOLEAN,
+    defaultValue:false
+  })
+  declare isFeatured:boolean
+
 }
 
 export default Product;
