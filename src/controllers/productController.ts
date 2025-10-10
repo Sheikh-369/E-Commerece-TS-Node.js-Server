@@ -36,9 +36,16 @@ class ProductController{
 
     static async updateProduct(req:Request,res:Response){
         const id=req.params.id
-        const {productName,productDescription,productPrice,oldPrice,productTotalStock,productDiscount,categoryId,isFeatured} = req.body 
+        const {productName,productDescription,productPrice,oldPrice,productTotalStock,productDiscount,categoryId,isFeatured} = req.body
         
-        const productImage=req.file?req.file.path : "https://weimaracademy.org/wp-content/uploads/2021/08/dummy-user.png"
+        //dealing with image
+        const existingProduct = await Product.findByPk(id);
+        if (!existingProduct) {
+                return res.status(404).json({ message: "Product not found." });
+            }
+        // Only replace image if a new one is uploaded
+        const productImage = req.file ? req.file.path : existingProduct.productImage;//Fetch existing product
+
 
         if(!productName || !productDescription || !productPrice || !productTotalStock || !categoryId){
             res.status(400).json({
