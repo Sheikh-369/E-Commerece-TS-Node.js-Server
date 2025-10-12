@@ -82,8 +82,8 @@ class OrderController {
     if (paymentMethod === PaymentMethods.Khalti) {
       const response = await khaltiPayment({
         totalAmount: totalAmount,
-        return_url: "http://localhost:3500/",
-        website_url: "http://localhost:3500/",
+        return_url: "http://localhost:3000/khalti-verify",//"http://localhost:3000/",
+        website_url: "http://localhost:3000/",
         purchase_order_id: orderData.id,
         purchase_order_name: "Order_" + orderData.id,
       });
