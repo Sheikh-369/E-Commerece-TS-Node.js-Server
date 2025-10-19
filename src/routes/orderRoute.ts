@@ -10,6 +10,12 @@ router.route("/order").post(Middleware.isLoggedI,
     asyncErrorHandler(orderController.createOrder)
 )
 
+router.route("/my-orders").get(
+    Middleware.isLoggedI,
+    Middleware.accessTo(Role.Customer),
+    asyncErrorHandler(orderController.getMyOrders)
+)
+
 router.route("/verify-transaction").post(Middleware.isLoggedI,
     Middleware.accessTo(Role.Customer),
     asyncErrorHandler(orderController.khaltiVerification)

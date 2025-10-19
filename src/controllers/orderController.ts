@@ -6,6 +6,7 @@ import { khaltiPayment } from "../services/paymentIntegration";
 import axios from "axios";
 import Payment from "../database/models/paymentModel";
 import Cart from "../database/models/cartModel";
+import Product from "../database/models/productModel";
 
 interface OrderRequest extends Request {
   user?: {
@@ -108,6 +109,41 @@ class OrderController {
       message: "Order created successfully!",
     });
   }
+
+  async getMyOrders (req: OrderRequest, res: Response){
+  const userId = req.user?.id;
+
+  const orders = await Order.findAll({
+    where: { userId },
+    attributes: ["id", "totalAmount", "createdAt"],
+    include: [
+      {
+        model: Payment,
+        as: "payment",
+        attributes: ["paymentStatus"]
+      },
+      {
+        model: OrderDetail,
+        as: "orderDetails",
+        attributes: ["orderQuantity"],
+        include: [
+          {
+            model: Product,
+            as: "product",
+            attributes: ["productName", "productImage", "productPrice"]
+          }
+        ]
+      }
+    ],
+    order: [["createdAt", "DESC"]]
+  });
+
+  res.status(200).json({
+    message: "Orders fetched successfully",
+    data: orders
+  });
+};
+
 
   async khaltiVerification(req:OrderRequest,res:Response){
     const {pidx}=req.body
