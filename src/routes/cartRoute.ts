@@ -27,5 +27,4 @@ router.route("/cart/:cartItemId").patch(
     Middleware.accessTo(Role.Customer),
     asyncErrorHandler(updateCartItemQuantity)
 )
-
 export default router
