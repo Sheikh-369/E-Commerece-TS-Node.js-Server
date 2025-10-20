@@ -10,10 +10,18 @@ router.route("/order").post(Middleware.isLoggedI,
     asyncErrorHandler(orderController.createOrder)
 )
 
+//my orders
 router.route("/my-orders").get(
     Middleware.isLoggedI,
     Middleware.accessTo(Role.Customer),
     asyncErrorHandler(orderController.getMyOrders)
+)
+
+//order by id
+router.route("/my-orders/:id").get(
+    Middleware.isLoggedI,
+    Middleware.accessTo(Role.Customer),
+    asyncErrorHandler(orderController.getOrderById)
 )
 
 router.route("/verify-transaction").post(Middleware.isLoggedI,

@@ -144,6 +144,42 @@ class OrderController {
   });
 };
 
+async getOrderById(req: OrderRequest, res: Response) {
+  const { id } = req.params;
+
+  const order = await Order.findOne({
+    where: { id },
+    attributes: ["id", "totalAmount", "createdAt"],
+    include: [
+      {
+        model: Payment,
+        as: "payment",
+        attributes: ["paymentStatus"]
+      },
+      {
+        model: OrderDetail,
+        as: "orderDetails",
+        attributes: ["orderQuantity"],
+        include: [
+          {
+            model: Product,
+            as: "product",
+            attributes: ["productName", "productImage", "productPrice"]
+          }
+        ]
+      }
+    ]
+  });
+
+  if (!order) {
+    return res.status(404).json({ message: "Order not found" });
+  }
+
+  res.status(200).json({
+    message: "Order fetched successfully",
+    data: order
+  });
+}
 
   async khaltiVerification(req:OrderRequest,res:Response){
     const {pidx}=req.body
