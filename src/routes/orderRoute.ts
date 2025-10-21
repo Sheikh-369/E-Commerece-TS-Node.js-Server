@@ -24,6 +24,13 @@ router.route("/my-orders/:id").get(
     asyncErrorHandler(orderController.getOrderById)
 )
 
+//cancell order
+router.route("/order/:id/cancel").patch(
+    Middleware.isLoggedI,
+    Middleware.accessTo(Role.Customer),
+    asyncErrorHandler(orderController.cancelOrder)
+)
+
 router.route("/verify-transaction").post(Middleware.isLoggedI,
     Middleware.accessTo(Role.Customer),
     asyncErrorHandler(orderController.khaltiVerification)

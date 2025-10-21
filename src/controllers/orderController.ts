@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Order from "../database/models/orderModel";
 import OrderDetail from "../database/models/orderDetail";
-import { PaymentMethods, PaymentStatus } from "../Global/types";
+import { OrderStatus, PaymentMethods, PaymentStatus } from "../Global/types";
 import { khaltiPayment } from "../services/paymentIntegration";
 import axios from "axios";
 import Payment from "../database/models/paymentModel";
@@ -115,7 +115,7 @@ class OrderController {
 
   const orders = await Order.findAll({
     where: { userId },
-    attributes: ["id", "totalAmount", "createdAt"],
+    attributes: ["id", "totalAmount", "createdAt","orderStatus"],
     include: [
       {
         model: Payment,
@@ -180,6 +180,40 @@ async getOrderById(req: OrderRequest, res: Response) {
     data: order
   });
 }
+
+async cancelOrder(req: OrderRequest, res: Response) {
+  const userId = req.user?.id;
+  const { id: orderId } = req.params;
+
+  const order = await Order.findOne({
+    where: { id: orderId, userId },
+    include: [{ model: Payment, as: "payment" }]
+  });
+
+  if (!order) {
+    return res.status(404).json({ message: "Order not found" });
+  }
+
+  // Only allow cancellation if order is Pending or Preparing
+  const cancellableStatuses = [OrderStatus.Pending, OrderStatus.Preparing];
+
+  if (!cancellableStatuses.includes(order.orderStatus as OrderStatus)) {
+    return res.status(400).json({
+      message: `Cannot cancel order in '${order.orderStatus}' status`
+    });
+  }
+
+  // Cancel the order
+  order.orderStatus = OrderStatus.Cancelled;
+  await order.save();
+
+  // No change to payment since it's either Paid or Pending (and no refunds yet)
+
+  return res.status(200).json({
+    message: "Order cancelled successfully"
+  });
+}
+
 
   async khaltiVerification(req:OrderRequest,res:Response){
     const {pidx}=req.body
