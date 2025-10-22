@@ -20,6 +20,7 @@ interface IProduct {
 }
 
 class OrderController {
+  //place and order
   async createOrder(req: OrderRequest, res: Response) {
     //tracking user from the user table
     const userId = req.user?.id;
@@ -109,7 +110,7 @@ class OrderController {
       message: "Order created successfully!",
     });
   }
-
+//view orders
   async getMyOrders (req: OrderRequest, res: Response){
   const userId = req.user?.id;
 
@@ -144,6 +145,7 @@ class OrderController {
   });
 };
 
+//order details
 async getOrderById(req: OrderRequest, res: Response) {
   const { id } = req.params;
 
@@ -181,6 +183,7 @@ async getOrderById(req: OrderRequest, res: Response) {
   });
 }
 
+//cancell order
 async cancelOrder(req: OrderRequest, res: Response) {
   const userId = req.user?.id;
   const { id: orderId } = req.params;
@@ -214,7 +217,57 @@ async cancelOrder(req: OrderRequest, res: Response) {
   });
 }
 
+//cahnge order status
+async updateOrderStatus(req: Request, res: Response) {
+  const { id: orderId } = req.params;
+  const { orderStatus } = req.body;
 
+  // Validate input
+  if (!orderStatus) {
+    return res.status(400).json({ message: "Order status is required" });
+  }
+
+  // Optional: Validate allowed statuses
+  const allowedStatuses = Object.values(OrderStatus);
+  if (!allowedStatuses.includes(orderStatus)) {
+    return res.status(400).json({ message: "Invalid order status value" });
+  }
+
+  const order = await Order.findByPk(orderId);
+
+  if (!order) {
+    return res.status(404).json({ message: "Order not found" });
+  }
+
+  order.orderStatus = orderStatus;
+  await order.save();
+
+  return res.status(200).json({ message: "Order status updated successfully" });
+}
+
+//delete an order
+async deleteOrder(req: Request, res: Response) {
+  const { id: orderId } = req.params;
+
+  const order = await Order.findByPk(orderId);
+
+  if (!order) {
+    return res.status(404).json({ message: "Order not found" });
+  }
+
+  // Delete related OrderDetails
+  await OrderDetail.destroy({ where: { orderId } });
+
+  // Delete associated payment
+  await Payment.destroy({ where: { orderId } });
+
+  // Finally, delete the order
+  await Order.destroy({ where: { id: orderId } });
+
+  return res.status(200).json({ message: "Order deleted successfully" });
+}
+
+//khalti payment verification
   async khaltiVerification(req:OrderRequest,res:Response){
     const {pidx}=req.body
     if(!pidx){
